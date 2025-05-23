@@ -1,0 +1,446 @@
+setwd("C:/Users/SadraSystem/Desktop/datasets/target-AML")
+dir()
+library(TCGAbiolinks)
+
+query_TCGA <- GDCquery(project = "TARGET-AML", data.category = "Transcriptome Profiling",
+                        workflow.type = "STAR - Counts")
+
+query_result <- getResults(query_TCGA)
+write.table(query_result, file = "all sample TARGET_AML.txt",quote = F,sep = "\t")
+data=read.table(file = "barcode primary BM vs Normal.txt" )
+
+data2=unlist(data)
+
+
+normal.sample<- subset(x = query_result, query_result$sample_type=="Bone Marrow Normal" & 
+                         query_result$access=="open" & query_result$experimental_strategy =="RNA-Seq")
+
+write.table(x = normal.sample, " open normal sample.txt", quote = F, sep = "\t")
+
+primary.sample<- subset(x = query_result, query_result$sample_type=="Primary Blood Derived Cancer - Bone Marrow" & 
+                          query_result$access == "open" & query_result$experimental_strategy=="RNA-Seq")
+
+write.table(x = primary.sample, " open primary BM sample.txt", quote = F, sep = "\t")
+
+
+
+query_TCGA2<- GDCquery(project = "TARGET-AML", data.category = "Transcriptome Profiling",
+                       workflow.type = "STAR - Counts",data.type = "Gene Expression Quantification", barcode = data2)
+
+GDCdownload(query_TCGA2 )
+query_result <- getResults(query_TCGA2)
+
+data.prepare <- GDCprepare(query_TCGA2, save = T, save.filename = "data.rda")
+library(SummarizedExperiment)
+data1<-assay(data.prepare)
+
+write.table(x = data1, file = "RAW data.txt", quote = F, sep = "\t")
+
+#########################################
+
+annot1=read.table("annotation.txt", header = T)
+annot=annot[,-4:-9]
+
+write.table(x = annot, file = "annotation.txt", quote = F, sep = "\t", row.names = F)
+annot_df <- cbind(annot, rownames(data1))
+row.names(annot_df)= row.names(data1)
+annot_df=annot_df[,-3]
+colnames(annot_df) = c("SYMBOL", " gene_type")
+
+write.table(x = annot_df, file = "annotation.txt", quote = F, sep = "\t", row.names = F)
+
+################# boxplot
+
+boxplot(data1)
+
+################ Histogram + Heatmap
+
+class(data1)
+
+
+hist(data1, breaks= 1000000, xlim= c(0,50))
+
+
+############################filter gene
+
+data2=data.frame(data1)
+data.filter <- data2[which(rowSums(data2)!=0),]
+
+
+data.filter<- data2[which(rowSums(data2)>200),]
+
+write.table(x = data.filter, file = "filter data.txt", quote = F, sep = "\t",
+            row.names = F)
+
+##########################
+rownames(data.filter)
+gene_name= annot_df[rownames(data.filter) , 1]
+gene_type=annot_df[rownames(data.filter), 2]
+
+fdata=data.filter
+fdata=cbind(fdata, gene_name)
+fdata=cbind(fdata, gene_type)
+write.table(x = fdata, file = "filter and annotate data.txt", quote = F, sep = "\t")
+table(fdata$gene_type)
+
+
+#####################################
+
+mRNA_df <- subset(fdata, fdata$gene_type=="protein_coding")
+
+write.table(x = mRNA_df, file = "mRNA df.txt", quote = F, sep = "\t",row.names = F)
+
+
+
+lncRNA_df <- subset(fdata, fdata$gene_type=="lncRNA")
+
+write.table(x = lncRNA_df, file = "lncRNA df.txt", quote = F, sep = "\t", row.names = F)
+
+
+
+miRNA_df <- subset(fdata, fdata$gene_type=="miRNA")
+
+write.table(x = miRNA_df, file = "miRNA df.txt", quote = F, sep = "\t", row.names = F)
+
+
+#######################
+RNA_table= table(fdata$gene_type)
+RNA_table= as.data.frame(RNA_table)
+colnames(RNA_table)= c("Type", "Number")
+write.table(x = RNA_table, file = "RNA_table.txt", quote = F, sep = "\t", row.names = F)
+library(ggplot2)
+
+plot<- ggplot(RNA_table, aes(x=Type, y=Number)) + geom_bar(stat="identity", 
+                                                           fill="skyblue") + labs(title="Barplot", x="RNA Type", y= "Number") +
+  theme_minimal()+
+  theme(axis.text.x=element_text(angle=45, hjust=1))
+
+plot
+
+
+########################## Metadata
+colnames(mRNA_df)
+meta.data <- read.table(file = "meta_data.txt", header = T)
+
+colnames(data.filter)==meta.data[,1]
+all(colnames(data.filter)==meta.data[,1])
+
+
+################################## DEseq2   for mRNA
+
+library(DESeq2)
+mRNA.raw= mRNA_df[,-50:-51]
+
+for(i in 1: ncol(mRNA.raw)) {mRNA.raw[,i] <- as.numeric (mRNA.raw[,i])}
+
+class(mRNA.raw)
+
+colnames(meta.data)
+d1= DESeqDataSetFromMatrix(countData = mRNA.raw, colData = meta.data, design = ~SampleType)
+
+data_rlog <- rlogTransformation(d1)
+
+data_rlog_df <- data.frame ( assay(data_rlog))
+write.table(x = data_rlog_df, file = "rlog mRNA data.txt", quote = F, sep = "\t",row.names = F)
+
+d2 <- estimateSizeFactors(d1)
+
+d3 <- DESeq(d2)
+
+deseq_result <- results (d3,pAdjustMethod = "fdr")
+class(deseq_result)
+
+mcols(deseq_result, use.names = T)
+
+final.result <- data.frame (deseq_result)
+write.table(x = final.result, file = " mRNA.DEG.txt", quote = F, sep = "\t", row.names = F)
+
+
+############################## DEseq lncRNA
+
+lncRNA.raw= lncRNA_df[,-50:-51]
+
+for(i in 1: ncol(lncRNA.raw)) {lncRNA.raw[,i] <- as.numeric (lncRNA.raw[,i])}
+
+class(lncRNA.raw)
+
+d1.lncRNA= DESeqDataSetFromMatrix(countData = lncRNA.raw, colData = meta.data,
+                                  design = ~SampleType)
+
+data_rlog_lncRNA <- rlogTransformation(d1.lncRNA)
+
+data_rlog_lncRNA <- data.frame ( assay(data_rlog_lncRNA))
+write.table(x = data_rlog_lncRNA, file = "rlog lncRNA data.txt", quote = F, sep = "\t",row.names = F)
+
+
+
+d2.lncRNA <- estimateSizeFactors(d1.lncRNA)
+
+d3.lncRNA <- DESeq(d2.lncRNA)
+
+deseq_result_lncRNA <- results (d3.lncRNA,pAdjustMethod = "fdr")
+class(deseq_result_lncRNA)
+
+mcols(deseq_result_lncRNA, use.names = T)
+
+final.result.lncRNA <- data.frame (deseq_result_lncRNA)
+write.table(x = final.result.lncRNA, file = " lncRNA.DEG.txt", quote = F, sep = "\t", row.names = F)
+
+##########################################
+
+miRNA.raw= miRNA_df[,-50:-51]
+
+for(i in 1: ncol(miRNA.raw)) {miRNA.raw[,i] <- as.numeric (miRNA.raw[,i])}
+
+class(miRNA.raw)
+
+colnames(meta.data)
+d1.miRNA= DESeqDataSetFromMatrix(countData = miRNA.raw, colData = meta.data,
+                                 design = ~SampleType)
+
+data_rlog_miRNA <- rlogTransformation(d1.miRNA)
+
+data_rlog_miRNA <- data.frame ( assay(data_rlog_miRNA))
+write.table(x = data_rlog_miRNA, file = "rlog miRNA data.txt", quote = F, sep = "\t",row.names = F)
+
+
+
+d2.miRNA <- estimateSizeFactors(d1.miRNA)
+
+d3.miRNA <- DESeq(d2.miRNA)
+
+deseq_result_miRNA <- results (d3.miRNA,pAdjustMethod = "fdr")
+class(deseq_result_miRNA)
+
+mcols(deseq_result_miRNA, use.names = T)
+
+final.result.miRNA <- data.frame (deseq_result_miRNA)
+write.table(x = final.result.miRNA, file = " miRNA.DEG.txt", quote = F, sep = "\t", row.names = F)
+####################################
+
+library(DESeq2)
+fdata.raw=fdata[,-50:-51]
+for(i in 1: ncol(fdata.raw)) {fdata.raw[,i] <- as.numeric (fdata.raw[,i])}
+
+class(fdata.raw)
+
+colnames(meta.data)
+d1= DESeqDataSetFromMatrix(countData = fdata.raw, colData = meta.data, design = ~SampleType)
+
+data_rlog <- rlogTransformation(d1)
+
+data_rlog_df <- data.frame ( assay(data_rlog))
+write.table(x = data_rlog_df, file = "rlog mRNA data.txt", quote = F, sep = "\t",row.names = F)
+
+d2 <- estimateSizeFactors(d1)
+
+d3 <- DESeq(d2)
+
+deseq_result <- results (d3,pAdjustMethod = "fdr")
+class(deseq_result)
+
+mcols(deseq_result, use.names = T)
+
+final.result <- data.frame (deseq_result)
+write.table(x = final.result, file = " whole.DEG.txt", quote = F, sep = "\t", row.names = F)
+
+
+
+#################################### annotation mRNA
+
+annot.fx <- function(x) { k <- annot_df[x,1]
+return (k)
+}
+
+gene.name <- annot.fx(rownames(final.result))
+length(gene.name)==nrow(final.result)
+
+final.result.annot<- cbind(gene.name)
+final.result.annot <- cbind (final.result.annot, final.result[1:6])
+
+rownames(final.result.annot) <- rownames(final.result)
+colnames(final.result.annot)[1]<- "Symbol"
+
+final.result.annot <- final.result.annot[order(final.result.annot$padj, decreasing=F),]
+
+write.table(x = final.result.annot, file = "final result whole annotated.txt", 
+            quote = F, sep = "\t",row.names = F)
+
+#################################### annotation lncRNA
+
+
+annot.fx <- function(x) { k <- annot_df[x,1]
+return (k)
+}
+
+gene.name.lncRNA <- annot.fx(rownames(final.result.lncRNA))
+length(gene.name.lncRNA)==nrow(final.result.lncRNA)
+
+final.result.annot.lncRNA <- cbind(gene.name.lncRNA)
+final.result.annot.lncRNA <- cbind (final.result.annot.lncRNA, final.result.lncRNA[1:6])
+
+rownames(final.result.annot.lncRNA) <- rownames(final.result.lncRNA)
+colnames(final.result.annot.lncRNA)[1]<- "Symbol"
+
+final.result.annot.lncRNA <- final.result.annot.lncRNA[order(final.result.annot.lncRNA$padj, decreasing=F),]
+
+write.table(x = final.result.annot.lncRNA, file = "final result lncRNA annotated.txt", 
+            quote = F, sep = "\t",row.names = F)
+
+################################# annotation miRNA
+
+
+annot.fx <- function(x) { k <- annot_df[x,1]
+return (k)
+}
+
+gene.name.miRNA <- annot.fx(rownames(final.result.miRNA))
+length(gene.name.miRNA)==nrow(final.result.miRNA)
+
+final.result.annot.miRNA <- cbind(gene.name.miRNA)
+final.result.annot.miRNA <- cbind (final.result.annot.miRNA, final.result.miRNA[1:6])
+
+rownames(final.result.annot.miRNA) <- rownames(final.result.miRNA)
+colnames(final.result.annot.miRNA)[1]<- "Symbol"
+
+final.result.annot.miRNA <- final.result.annot.miRNA[order(final.result.annot.miRNA$padj, decreasing=F),]
+
+write.table(x = final.result.annot.miRNA, file = "final result miRNA annotated.txt", 
+            quote = F, sep = "\t",row.names = F)
+
+
+################################################ visualization mRNA
+
+##volcano
+setwd("C:/Users/SadraSystem/Desktop/payanname/presentation for dr.vahdat")
+
+library(EnhancedVolcano)
+final.result.annot <- read.table("final result whole annotated.txt", header = T)
+
+
+final.result.annot <- as.data.frame(final.result.annot)
+colnames(final.result.annot)
+top.gene <- read.table("top gene.intersection.txt",header = T)
+top.gene <- subset(final.result.annot, padj<0.01 & abs(log2FoldChange)>=3)
+write.table(x = top.gene, file = " Top gene.mRNA.txt", quote = F, sep = "\t",row.names = F)
+
+
+top_genes=final.result.annot[1:6,1]
+my.plot <- EnhancedVolcano(toptable = final.result.annot, title = "P Value vs Fold Change", 
+                           lab= final.result.annot$Symbol, x = "log2FoldChange", y = "pvalue",
+                           selectLab =top.gene,xlab = bquote(~Log[2] ~ "fold change"),
+                           pCutoff = 0.01, FCcutoff = 2.0, pointSize = 0.5, labSize = 2.0,
+                           labCol = "black", labFace = "bold", boxedLabels = T, colAlpha = 3/4,
+                           legendPosition = "right",legendLabSize = 8, legendIconSize = 2.0, 
+                           drawConnectors = F, widthConnectors = 1.0, colConnectors = "black")
+
+my.plot
+
+
+
+########heatmap
+
+norm.data=data_rlog_df
+top_gene_count <- data_rlog_df[rownames(final.result.annot)[1:30],]
+
+gene_names_2 <- annot.fx(rownames(top_gene_count))
+rownames(top_gene_count)<- gene_names_2
+
+colnames(top_gene_count)<- c("Normal1", "Normal2", "Normal3", "Normal4", 
+                             "Normal5","Normal6","Normal7", "Primay AML1","Primay AML2", "Primay AML3", "Primay AML4",
+                             "Primay AML5","Primay AML6", "Primay AML7", "Primay AML8", "Primay AML9", 
+                             "Primay AML10", "Primay AML11", "Primay AML12", "Primay AML13","Primay AML14",
+                             "Primay AML15", "Primay AML16", "Primay AML17", "Primay AML18", "Primay AML19",
+                             "Primay AML20","Primary AML21","Primary AML22","Primary AML23","Primary AML24",
+                             "Primary AML25","Primary AML26","Primary AML27", "Primary AML28","Primary AML29",
+                             "Primary AML30","Primary AML31","Primary AML32","Primary AML33","Primary AML34",
+                             "Primary AML35","Primary AML36","Primary AML37","Primary AML38","Primary AML39",
+                             "Primary AML40","Primary AML41","Primary AML42")
+write.table(x = top_gene_count,file = "top gene count.txt",quote = F,sep = "\t")
+write.table(x = top_gene_count,file = "top gene count2.txt",quote = F,sep = "\t",row.names = F)
+
+library(pheatmap)
+cols=colorRampPalette(c("skyblue","red"))
+cols(10)
+heat.plot <- pheatmap(top, color=cols(10), fontsize=5,
+                      cellwidth = 12, cellheight = 7, angle_col = 45,
+                      main = "Top Genes", fontsize_row = 7,fontsize_col = 8, cluster_cols = T )
+heat.plot
+
+
+################## pca
+library(ggplot2)
+norm.data <- data_rlog_df
+
+pc<- prcomp(norm.data)
+pcr <- data.frame(pc$rotation[,1:3], meta.data$SampleType)
+
+group <- meta.data$SampleType
+pca.plot <- ggplot(pcr, aes(PC1, PC2, color= group )) + geom_point(size=3)
+pca.plot
+
+
+###################### clinical
+
+library(TCGAbiolinks)
+clinicaldata <- GDCquery_clinic("TARGET-AML")
+write.table(x = clinicaldata, file = "clinicaldata.txt", quote = F, sep = "\t")
+class(clinicaldata)
+
+table(clinicaldata$vital_status)
+
+dead_sample <- subset(clinicaldata, clinicaldata$vital_status=="Dead")
+alive_sample <- subset(clinicaldata, clinicaldata$vital_status=="Alive")
+
+meta_dead <- dead_sample[,c("submitter_id","vital_status")]
+meta_alive <- alive_sample[,c("submitter_id", "vital_status")]
+
+dead_alive_meta <-c()
+dead_alive_meta <- rbind(dead_alive_meta, meta_dead)
+dead_alive_meta <- rbind(dead_alive_meta, meta_alive)
+
+colnames(dead_alive_meta) <- c("SampleName", "SampleType")
+
+
+
+
+
+####################################
+final.result.annot <- as.data.frame(final.result.annot)
+colnames(final.result.annot)
+
+final.result.annot=read.table("final result mRNA annotated.txt", header = T)
+
+top.mRNA1 <- subset(final.result.annot, padj<0.01 & abs(log2FoldChange)>=2.5)
+write.table(x = top.mRNA, file = " Top mRNA1.txt", quote = F, sep = "\t",row.names = F)
+
+UP.mRNA <- subset(final.result.annot, padj<0.01 & log2FoldChange>=2)
+DOWN.mRNA <- subset(final.result.annot, padj<0.01 & log2FoldChange<=(-2))
+write.table(x = UP.mRNA, file = " UP gene.txt", quote = F, sep = "\t",row.names = F)
+write.table(x = DOWN.mRNA, file = " DOWN gene.txt", quote = F, sep = "\t",row.names = F)
+
+#########################################
+
+final.result.annot.lncRNA=read.table("final result lncRNA annotated.txt", header = T)
+final.result.annot.lncRNA <- as.data.frame(final.result.annot.lncRNA)
+colnames(final.result.annot.lncRNA)
+
+top.lncRNA1 <- subset(final.result.annot.lncRNA, padj<0.01 & abs(log2FoldChange)>=2.5)
+write.table(x = top.lncRNA1, file = " Top lncRNA2.txt", quote = F, sep = "\t",row.names = F)
+
+mRNA1=data.frame(top.mRNA1[,1])
+write.table(x = mRNA1, file = " mRNA1.txt", quote = F, sep = "\t",row.names = F)
+lncRNA=data.frame(top.lncRNA1[,1])
+write.table(x = lncRNA, file = " lncRNA2.txt", quote = F, sep = "\t",row.names = F)
+
+miRNA=data.frame(top.miRNA[,1])
+write.table(x = miRNA, file = " miRNA.txt", quote = F, sep = "\t",row.names = F)
+
+##########################################
+
+final.result.annot.miRNA=read.table("final result miRNA annotated.txt", header = T)
+final.result.annot.miRNA <- as.data.frame(final.result.annot.miRNA)
+colnames(final.result.annot.miRNA)
+
+top.miRNA <- subset(final.result.annot.miRNA, padj<0.01 & abs(log2FoldChange)>=1.5)
+write.table(x = top.miRNA, file = " Top miRNA.txt", quote = F, sep = "\t",row.names = F)
