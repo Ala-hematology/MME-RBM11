@@ -1,0 +1,975 @@
+setwd("C:/Users/SadraSystem/Desktop/datasets/Beat AML whole open BM")
+library(TCGAbiolinks)
+
+All_GDC_projects <- getGDCprojects()
+All_GDC_projects[,1]
+
+
+aml_data1<- getProjectSummary("BEATAML1.0-COHORT" )
+aml_data1$data_categories
+
+
+
+
+#########################
+
+p=read.table(file = "BM barcode.T.txt")
+
+select=unlist(p)
+
+query_TCGA2= GDCquery(project = "BEATAML1.0-COHORT", data.category = "Transcriptome Profiling",
+                     workflow.type = "STAR - Counts",
+                     data.type = "Gene Expression Quantification", 
+                     barcode = select)
+
+query_results2<- getResults(query_TCGA2)
+
+
+write.table(x = query_results2, file = "AML sample.txt", quote = F, sep = "\t", row.names = F)
+
+GDCdownload(query_TCGA2)
+
+###############################################
+P1= read.table(file = "P1.txt")
+P2= read.table(file = "P2.txt")
+P3= read.table(file = "P3.txt")
+P4= read.table(file = "P4.txt")
+P5= read.table(file = "P5.txt")
+P6= read.table(file = "P6.txt")
+P7= read.table(file = "P7.txt")
+P8= read.table(file = "P8.txt")
+P9= read.table(file = "P9.txt")
+P10= read.table(file = "P10.txt")
+P11= read.table(file = "P11.txt")
+P12= read.table(file = "P12.txt")
+P13= read.table(file = "P13.txt")
+P14= read.table(file = "P14.txt")
+P15= read.table(file = "P15.txt")
+P16= read.table(file = "P16.txt")
+P17= read.table(file = "P17.txt")
+P18= read.table(file = "P18.txt")
+P19= read.table(file = "P19.txt")
+P20= read.table(file = "P20.txt")
+P21= read.table(file = "P21.txt")
+P22= read.table(file = "P22.txt")
+P23= read.table(file = "P23.txt")
+P24= read.table(file = "P24.txt")
+P25= read.table(file = "P25.txt")
+P26= read.table(file = "P26.txt")
+P27= read.table(file = "P27.txt")
+P28= read.table(file = "P28.txt")
+P29= read.table(file = "P29.txt")
+P30= read.table(file = "P30.txt")
+P31= read.table(file = "P31.txt")
+P32= read.table(file = "P32.txt")
+P33= read.table(file = "P33.txt")
+P34= read.table(file = "P34.txt")
+P35= read.table(file = "P35.txt")
+P36= read.table(file = "P36.txt")
+P37= read.table(file = "P37.txt")
+P38= read.table(file = "P38.txt")
+P39= read.table(file = "P39.txt")
+P40= read.table(file = "P40.txt")
+P41= read.table(file = "P41.txt")
+P42= read.table(file = "P42.txt")
+P43= read.table(file = "P43.txt")
+P44= read.table(file = "P44.txt")
+P45= read.table(file = "P45.txt")
+P46= read.table(file = "P46.txt")
+P47= read.table(file = "P47.txt")
+P48= read.table(file = "P48.txt")
+P49= read.table(file = "P49.txt")
+P50= read.table(file = "P50.txt")
+P51= read.table(file = "P51.txt")
+P52= read.table(file = "P52.txt")
+P53= read.table(file = "P53.txt")
+P54= read.table(file = "P54.txt")
+P55= read.table(file = "P55.txt")
+
+
+N1= read.table(file = "N1.txt")
+N2= read.table(file = "N2.txt")
+N3= read.table(file = "N3.txt")
+N4= read.table(file = "N4.txt")
+N5= read.table(file = "N5.txt")
+colnames(N1)=N1[1,]
+N1=N1[-1,]
+
+colnames(N2)=N2[1,]
+N2=N2[-1,]
+
+
+
+
+
+
+
+
+colnames(N3)=N3[1,]
+N3=N3[-1,]
+
+
+colnames(N4)=N4[1,]
+N4=N4[-1,]
+
+
+colnames(N5)=N5[1,]
+N5=N5[-1,]
+
+
+
+colnames(P1)=P1[1,]
+P1=P1[-1,]
+
+colnames(P2)=P2[1,]
+P2=P2[-1,]
+
+
+colnames(P3)=P3[1,]
+P3=P3[-1,]
+
+
+colnames(P4)=P4[1,]
+P4=P4[-1,]
+
+
+colnames(P5)=P5[1,]
+P5=P5[-1,]
+
+
+colnames(P6)=P6[1,]
+P6=P6[-1,]
+
+
+colnames(P7)=P7[1,]
+P7=P7[-1,]
+
+
+colnames(P8)=P8[1,]
+P8=P8[-1,]
+
+
+colnames(P9)=P9[1,]
+P9=P9[-1,]
+
+
+colnames(P10)=P10[1,]
+P10=P10[-1,]
+
+
+
+colnames(P11)=P11[1,]
+P11=P11[-1,]
+
+
+colnames(P12)=P12[1,]
+P12=P12[-1,]
+
+
+colnames(P13)=P13[1,]
+P13=P13[-1,]
+
+
+colnames(P14)=P14[1,]
+P14=P14[-1,]
+
+
+colnames(P15)=P15[1,]
+P15=P15[-1,]
+
+
+colnames(P16)=P16[1,]
+P16=P16[-1,]
+
+
+colnames(P17)=P17[1,]
+P17=P17[-1,]
+
+
+colnames(P18)=P18[1,]
+P18=P18[-1,]
+
+
+colnames(P19)=P19[1,]
+P19=P19[-1,]
+
+
+colnames(P20)=P20[1,]
+P20=P20[-1,]
+
+colnames(P21)=P21[1,]
+P21=P21[-1,]
+
+colnames(P22)=P22[1,]
+P22=P22[-1,]
+
+colnames(P23)=P23[1,]
+P23=P23[-1,]
+
+colnames(P24)=P24[1,]
+P24=P24[-1,]
+
+colnames(P25)=P25[1,]
+P25=P25[-1,]
+
+colnames(P27)=P27[1,]
+P27=P27[-1,]
+
+colnames(P26)=P26[1,]
+P26=P26[-1,]
+
+colnames(P28)=P28[1,]
+P28=P28[-1,]
+
+colnames(P29)=P29[1,]
+P29=P29[-1,]
+
+colnames(P30)=P30[1,]
+P30=P30[-1,]
+
+colnames(P31)=P31[1,]
+P31=P31[-1,]
+
+colnames(P32)=P32[1,]
+P32=P32[-1,]
+
+colnames(P33)=P33[1,]
+P33=P33[-1,]
+
+colnames(P34)=P34[1,]
+P34=P34[-1,]
+
+colnames(P35)=P35[1,]
+P35=P35[-1,]
+
+colnames(P36)=P36[1,]
+P36=P36[-1,]
+
+colnames(P37)=P37[1,]
+P37=P37[-1,]
+
+colnames(P38)=P38[1,]
+P38=P38[-1,]
+
+colnames(P39)=P39[1,]
+P39=P39[-1,]
+
+colnames(P40)=P40[1,]
+P40=P40[-1,]
+
+colnames(P41)=P41[1,]
+P41=P41[-1,]
+
+colnames(P42)=P42[1,]
+P42=P42[-1,]
+
+colnames(P43)=P43[1,]
+P43=P43[-1,]
+
+colnames(P44)=P44[1,]
+P44=P44[-1,]
+
+colnames(P45)=P45[1,]
+P45=P45[-1,]
+
+colnames(P46)=P46[1,]
+P46=P46[-1,]
+
+colnames(P47)=P47[1,]
+P47=P47[-1,]
+
+colnames(P48)=P48[1,]
+P48=P48[-1,]
+
+colnames(P49)=P49[1,]
+P49=P49[-1,]
+
+colnames(P50)=P50[1,]
+P50=P50[-1,]
+
+colnames(P51)=P51[1,]
+P51=P51[-1,]
+
+colnames(P52)=P52[1,]
+P52=P52[-1,]
+
+colnames(P53)=P53[1,]
+P53=P53[-1,]
+
+colnames(P54)=P54[1,]
+P54=P54[-1,]
+
+colnames(P55)=P55[1,]
+P55=P55[-1,]
+
+
+
+
+
+N1=N1[,-5:-9]
+N2=N2[,-5:-9]
+N3=N3[,-5:-9]
+N4=N4[,-5:-9]
+N5=N5[,-5:-9]
+P1=P1[,-5:-9]
+P1=P1[,-5:-9]
+P2=P2[,-5:-9]
+P3=P3[,-5:-9]
+P4=P4[,-5:-9]
+P5=P5[,-5:-9]
+P6=P6[,-5:-9]
+P7=P7[,-5:-9]
+P8=P8[,-5:-9]
+P9=P9[,-5:-9]
+P10=P10[,-5:-9]
+P11=P11[,-5:-9]
+P12=P12[,-5:-9]
+P13=P13[,-5:-9]
+P14=P14[,-5:-9]
+P15=P15[,-5:-9]
+P16=P16[,-5:-9]
+P17=P17[,-5:-9]
+P18=P18[,-5:-9]
+P19=P19[,-5:-9]
+P20=P20[,-5:-9]
+P21=P21[,-5:-9]
+P22=P22[,-5:-9]
+P23=P23[,-5:-9]
+P24=P24[,-5:-9]
+P25=P25[,-5:-9]
+P26=P26[,-5:-9]
+P27=P27[,-5:-9]
+P28=P28[,-5:-9]
+P29=P29[,-5:-9]
+P30=P30[,-5:-9]
+P31=P31[,-5:-9]
+P32=P32[,-5:-9]
+P33=P33[,-5:-9]
+P34=P34[,-5:-9]
+P35=P35[,-5:-9]
+P36=P36[,-5:-9]
+P37=P37[,-5:-9]
+P38=P38[,-5:-9]
+P39=P39[,-5:-9]
+P40=P40[,-5:-9]
+P41=P41[,-5:-9]
+P42=P42[,-5:-9]
+P43=P43[,-5:-9]
+P44=P44[,-5:-9]
+P45=P45[,-5:-9]
+P46=P46[,-5:-9]
+P47=P47[,-5:-9]
+P48=P48[,-5:-9]
+P49=P49[,-5:-9]
+P50=P50[,-5:-9]
+P51=P51[,-5:-9]
+P52=P52[,-5:-9]
+P53=P53[,-5:-9]
+P54=P54[,-5:-9]
+P55=P55[,-5:-9]
+
+
+control=cbind(N1,N2$unstranded,N3$unstranded,N4$unstranded,N5$unstranded)
+colnames(control)=c("gene_id", "gene_name", "gene_type", "N1","N2","N3", "N4", "N5")
+write.table(x = control,file = "control.txt",sep = "\t",quote = F ,row.names = F)
+
+
+primary=cbind(P1,P2$unstranded,P3$unstranded,P4$unstranded,P5$unstranded,P6$unstranded,
+              P7$unstranded,P8$unstranded,P9$unstranded,P10$unstranded,P11$unstranded,
+              P12$unstranded,P13$unstranded,P14$unstranded,P15$unstranded,P16$unstranded,
+              P17$unstranded,P18$unstranded,P19$unstranded,P20$unstranded,P21$unstranded,
+              P22$unstranded,P23$unstranded,P24$unstranded,P25$unstranded,P26$unstranded,
+              P27$unstranded,P28$unstranded, P29$unstranded, P30$unstranded, P31$unstranded,
+              P32$unstranded, P33$unstranded, P34$unstranded, P35$unstranded, P36$unstranded,
+              P37$unstranded, P38$unstranded, P39$unstranded, P40$unstranded, P41$unstranded, P42$unstranded,
+              P43$unstranded, P44$unstranded, P45$unstranded, P46$unstranded,P47$unstranded,
+              P48$unstranded, P49$unstranded, P50$unstranded, P51$unstranded, P52$unstranded,P53$unstranded,
+              P54$unstranded,P55$unstranded)
+colnames(primary)=c("gene_id", "gene_name", "gene_type","P1", "P2","P3","P4","P5",
+                    "P6","P7","P8","P9","P10","P11","P12","P13","P14","P15","P16",
+                    "P17","P18","P19","P20", "P21", "P22", "P23", "P24", "P25",
+                    "26","P27", "P28", "P29", "P30", "P31", "P32", "P33", "P34",
+                    "P35", "P36", "P37", "P38", "P39", "P40", "P41", "P42", "P43", "P44", 
+                    "P45", "P46", "P47", "P48", "P49", "P50", "P51", "P52", "P53", "P54", "P55")
+write.table(x = primary,file = "primary.txt", quote = F, sep = "\t")
+data=cbind(control,primary)
+data=data[,-9:-11]
+data.annot=data
+data=data.annot[,-1:-3]
+rownames(data)=primary$gene_id
+write.table(x = data,file = "primary and control.txt",quote = F, sep = "\t")
+write.table(x = data.annot,file = "primary and control. annot .txt",quote = F, sep = "\t")
+
+##############################################
+
+
+################# boxplot
+
+boxplot(data)
+################ Histogram + Heatmap
+
+data2=unlist(data)
+class(data)
+data2=as.numeric(data2)
+hist(data2)
+
+hist(data2, breaks= 1000000, xlim= c(0,50))
+
+
+x=read.csv("primary and control.csv", header = T, sep = ",", quote = "\"")
+rownames(x)=x$X
+x=x[,-1]
+data.filter <- data2[which(rowSums(data2)!=0),]
+
+
+data.filter= data[which(rowSums(x)>200),]
+
+write.table(x = data.filter, file = "filter data.txt", quote = F, sep = "\t",
+            row.names = F)
+
+
+########################### 
+
+annot.file=data.annot[,1:3]
+rownames(annot.file)= annot.file$gene_id
+annot.file=annot.file[,-1]
+colnames(annot.file)= c("SYMBOL", "BioType")
+write.table(x = annot.file, file = " annotation file.txt", quote = F, sep = "\t",
+            row.names = F)
+
+rownames(data.filter)
+gene_name= annot.file[rownames(data.filter) , 1]
+gene_type=annot.file[rownames(data.filter), 2]
+
+data1=data.filter
+data1=cbind(data1, gene_name)
+data1=cbind(data1, gene_type)
+
+table(data1$gene_type)
+
+
+#####################################
+
+mRNA_df <- subset(data1, data1$gene_type=="protein_coding")
+
+write.table(x = mRNA_df, file = "mRNA df.txt", quote = F, sep = "\t",row.names = F)
+
+
+
+lncRNA_df <- subset(data1, data1$gene_type=="lncRNA")
+
+write.table(x = lncRNA_df, file = "lncRNA df.txt", quote = F, sep = "\t", row.names = F)
+
+
+
+miRNA_df <- subset(data1, data1$gene_type=="miRNA")
+
+write.table(x = miRNA_df, file = "miRNA df.txt", quote = F, sep = "\t", row.names = F)
+
+
+#######################
+RNA_table= table(data1$gene_type)
+RNA_table= as.data.frame(RNA_table)
+colnames(RNA_table)= c("Type", "Number")
+write.table(x = RNA_table, file = "RNA_table.txt", quote = F, sep = "\t", row.names = F)
+library(ggplot2)
+
+plot<- ggplot(RNA_table, aes(x=Type, y=Number)) + geom_bar(stat="identity", 
+                                                           fill="skyblue") + labs(title="Barplot", x="RNA Type", y= "Number") +
+  theme_minimal()+
+  theme(axis.text.x=element_text(angle=45, hjust=1))
+
+plot
+
+
+########################## Metadata
+data1.1=data1[,-61:-62]
+meta.data=read.table(file = "meta_data.txt")
+colnames(meta.data)=meta.data[1,]
+meta.data=meta.data[-1,]
+colnames(data1.1)==meta.data[,1]
+all(colnames(data1.1)==meta.data[,1])
+
+colnames(data1.1)[31]="P26"
+################################## DEseq2   for mRNA
+
+library(DESeq2)
+mRNA.raw= mRNA_df[,-61:-62]
+
+for(i in 1: ncol(mRNA.raw)) {mRNA.raw[,i] <- as.numeric (mRNA.raw[,i])}
+
+class(mRNA.raw)
+
+colnames(meta.data)
+d1= DESeqDataSetFromMatrix(countData = mRNA.raw, colData = meta.data,
+                           design = ~SampleType)
+
+data_rlog <- rlogTransformation(d1)
+
+data_rlog_df <- data.frame ( assay(data_rlog))
+write.table(x = data_rlog_df, file = "rlog mRNA data.txt", quote = F, sep = "\t",row.names = F)
+
+
+
+d2 <- estimateSizeFactors(d1)
+
+d3 <- DESeq(d2)
+
+deseq_result <- results (d3,pAdjustMethod = "fdr")
+class(deseq_result)
+
+mcols(deseq_result, use.names = T)
+
+final.result <- data.frame (deseq_result)
+write.table(x = final.result, file = " mRNA.DEG.txt", quote = F, sep = "\t", row.names = F)
+
+
+############################## DEseq lncRNA
+
+lncRNA.raw= lncRNA_df[,-61:-62]
+
+for(i in 1: ncol(lncRNA.raw)) {lncRNA.raw[,i] <- as.numeric (lncRNA.raw[,i])}
+
+class(lncRNA.raw)
+
+colnames(meta.data)
+d1.lncRNA= DESeqDataSetFromMatrix(countData = lncRNA.raw, colData = meta.data,
+                                  design = ~SampleType)
+
+data_rlog_lncRNA <- rlogTransformation(d1.lncRNA)
+
+data_rlog_lncRNA <- data.frame ( assay(data_rlog_lncRNA))
+write.table(x = data_rlog_lncRNA, file = "rlog lncRNA data.txt", quote = F, sep = "\t",row.names = F)
+
+
+
+d2.lncRNA <- estimateSizeFactors(d1.lncRNA)
+
+d3.lncRNA <- DESeq(d2.lncRNA)
+
+deseq_result_lncRNA <- results (d3.lncRNA,pAdjustMethod = "fdr")
+class(deseq_result_lncRNA)
+
+mcols(deseq_result_lncRNA, use.names = T)
+
+final.result.lncRNA <- data.frame (deseq_result_lncRNA)
+write.table(x = final.result.lncRNA, file = " lncRNA.DEG.txt", quote = F, sep = "\t", row.names = F)
+
+##########################################
+
+miRNA.raw= miRNA_df[,-61:-62]
+
+for(i in 1: ncol(miRNA.raw)) {miRNA.raw[,i] <- as.numeric (miRNA.raw[,i])}
+
+class(miRNA.raw)
+
+colnames(meta.data)
+d1.miRNA= DESeqDataSetFromMatrix(countData = miRNA.raw, colData = meta.data,
+                                 design = ~SampleType)
+
+data_rlog_miRNA <- rlogTransformation(d1.miRNA)
+
+data_rlog_miRNA <- data.frame ( assay(data_rlog_miRNA))
+write.table(x = data_rlog_miRNA, file = "rlog miRNA data.txt", quote = F, sep = "\t",row.names = F)
+
+
+
+d2.miRNA <- estimateSizeFactors(d1.miRNA)
+
+d3.miRNA <- DESeq(d2.miRNA)
+
+deseq_result_miRNA <- results (d3.miRNA,pAdjustMethod = "fdr")
+class(deseq_result_miRNA)
+
+mcols(deseq_result_miRNA, use.names = T)
+
+final.result.miRNA <- data.frame (deseq_result_miRNA)
+write.table(x = final.result.miRNA, file = " miRNA.DEG.txt", quote = F, sep = "\t", row.names = F)
+
+#################################### annotation mRNA
+
+annot.fx <- function(x) { k <- annot.file[x,1]
+return (k)
+}
+
+gene.name.mRNA <- annot.fx(rownames(final.result))
+length(gene.name.mRNA)==nrow(final.result)
+
+final.result.annot <- cbind(gene.name.mRNA)
+final.result.annot <- cbind (final.result.annot, final.result[1:6])
+
+rownames(final.result.annot) <- rownames(final.result)
+colnames(final.result.annot)[1]<- "Symbol"
+
+final.result.annot <- final.result.annot[order(final.result.annot$padj, decreasing=F),]
+
+write.table(x = final.result.annot, file = "final result mRNA annotated.txt", 
+            quote = F, sep = "\t",row.names = F)
+
+#################################### annotation lncRNA
+
+
+annot.fx <- function(x) { k <- annot.file[x,1]
+return (k)
+}
+
+gene.name.lncRNA <- annot.fx(rownames(final.result.lncRNA))
+length(gene.name.lncRNA)==nrow(final.result.lncRNA)
+
+final.result.annot.lncRNA <- cbind(gene.name.lncRNA)
+final.result.annot.lncRNA <- cbind (final.result.annot.lncRNA, final.result.lncRNA[1:6])
+
+rownames(final.result.annot.lncRNA) <- rownames(final.result.lncRNA)
+colnames(final.result.annot.lncRNA)[1]<- "Symbol"
+
+final.result.annot.lncRNA <- final.result.annot.lncRNA[order(final.result.annot.lncRNA$padj, decreasing=F),]
+
+write.table(x = final.result.annot.lncRNA, file = "final result lncRNA annotated.txt", 
+            quote = F, sep = "\t",row.names = F)
+
+################################# annotation miRNA
+
+
+annot.fx <- function(x) { k <- annot.file[x,1]
+return (k)
+}
+
+gene.name.miRNA <- annot.fx(rownames(final.result.miRNA))
+length(gene.name.miRNA)==nrow(final.result.miRNA)
+
+final.result.annot.miRNA <- cbind(gene.name.miRNA)
+final.result.annot.miRNA <- cbind (final.result.annot.miRNA, final.result.miRNA[1:6])
+
+rownames(final.result.annot.miRNA) <- rownames(final.result.miRNA)
+colnames(final.result.annot.miRNA)[1]<- "Symbol"
+
+final.result.annot.miRNA <- final.result.annot.miRNA[order(final.result.annot.miRNA$padj, decreasing=F),]
+
+write.table(x = final.result.annot.miRNA, file = "final result miRNA annotated.txt", 
+            quote = F, sep = "\t",row.names = F)
+
+
+################################################ visualization mRNA
+
+##volcano
+
+BiocManager::install("EnhancedVolcano")
+library(EnhancedVolcano)
+
+final.result.annot <- as.data.frame(final.result.annot)
+colnames(final.result.annot)
+
+top.gene <- subset(final.result.annot, padj<0.01 & abs(log2FoldChange)>=2.5)
+write.table(x = top.gene, file = " Top gene.mRNA.txt", quote = F, sep = "\t",row.names = F)
+
+f.top = c("KIF26B","TPPP3")
+f.top=read.table("f.top.txt",header = T)
+f.top=f.top[,1]
+
+top_genes=final.result.annot[1:10,1]
+my.plot <- EnhancedVolcano(toptable = final.result.annot, title = "Genes Volcano Plot", 
+                           lab= final.result.annot$Symbol, x = "log2FoldChange", y = "pvalue",
+                           selectLab =f.top,xlab = bquote(~Log[2] ~ "fold change"),
+                           pCutoff = 0.01, FCcutoff = 2.0, pointSize = 0.5, labSize = 2.0,
+                           labCol = "black", labFace = "bold", boxedLabels = T, colAlpha = 3/4,
+                           legendPosition = "right",legendLabSize = 8, legendIconSize = 2.0, 
+                           drawConnectors = F, widthConnectors = 1.0, colConnectors = "black")
+
+my.plot
+
+
+
+########heatmap
+
+norm.data=data_rlog_df
+top_gene_count <- data_rlog_df[rownames(final.result.annot)[1:30],]
+
+
+
+
+top_gene_count2 <- data_rlog_df[rownames(final.result.annot),]
+
+
+write.table(x=top_gene_count, file = "top gene annot count.txt", quote = F, sep = "\t")
+
+gene_names_3 <- annot.fx(rownames(top_gene_count2))
+rownames(top_gene_count2)<- gene_names_3
+top_gene_count2=t(top_gene_count2)
+colnames(top_gene_count2)<- gene_names_3
+top_gene_count2=t(top_gene_count2)
+top_gene_count2=data.frame(top_gene_count2)
+write.table(x = top_gene_count2, file = "top gene. whole.annot.txt", quote = F, sep = "\t")
+
+
+colnames(top_gene_count2)<- c("NL1", "NL2", "NL3", "NL4","NL5","AML1","AML2", "AML3", "AML4",
+                              "AML5","AML6", "AML7", "AML8", "AML9", 
+                              "AML10", "AML11", "AML12","AML13", "AML14","AML15",
+                              "AML16","AML17", "AML18","AML19","AML20","AML21","AML22",
+                              "AML23","AML24","AML25","AML26","AML27","AML28","AML29","AML30",
+                              "AML31","AML32","AML33","AML34","AML35","AML36","AML37","AML38",
+                              "AML39","AML40","AML41","AML42","AML43","AML44","AML45","AML46",
+                              "AML47","AML48","AML49","AML50","AML51","AML52","AML53","AML54","AML55")
+
+
+
+top2=read.table("intersection.top1.txt", header = T)
+top3=t(top2)
+colnames(top3)=top2[,1]
+top2=t(top3)
+top2=top2[,-1]
+
+
+write.table(top2,"top2.txt", quote = F, sep = "\t")
+top2=read.csv("intersection.top1.csv",sep = ",", quote = "\"" )
+
+rownames(top2)=top2[,1]
+top2=top2[,-1]
+
+
+
+
+
+
+
+
+
+library(pheatmap)
+cols=colorRampPalette(c("skyblue","red"))
+cols(6)
+heat.plot <- pheatmap(top2, color=cols(6), fontsize=6,
+                      cellwidth = 12, cellheight = 3, angle_col = 45,
+                      main = "Top Genes", fontsize_row = 3,fontsize_col = 8, cluster_cols = F )
+heat.plot
+
+
+################## pca
+library(ggplot2)
+norm.data <- data_rlog_df
+
+pc<- prcomp(norm.data)
+pcr <- data.frame(pc$rotation[,1:3], meta.data$SampleType)
+
+group <- meta.data$SampleType
+pca.plot <- ggplot(pcr, aes(PC1, PC2, color= group )) + geom_point(size=3)
+pca.plot
+
+
+###################### clinical
+
+library(TCGAbiolinks)
+clinicaldata <- GDCquery_clinic("BEATAML1.0-COHORT")
+write.table(x = clinicaldata, file = "clinicaldata.txt", quote = F, sep = "\t")
+class(clinicaldata)
+
+table(clinicaldata$vital_status)
+
+dead_sample <- subset(clinicaldata, clinicaldata$vital_status=="Dead")
+alive_sample <- subset(clinicaldata, clinicaldata$vital_status=="Alive")
+
+meta_dead <- dead_sample[,c("submitter_id","vital_status")]
+meta_alive <- alive_sample[,c("submitter_id", "vital_status")]
+
+dead_alive_meta <-c()
+dead_alive_meta <- rbind(dead_alive_meta, meta_dead)
+dead_alive_meta <- rbind(dead_alive_meta, meta_alive)
+
+colnames(dead_alive_meta) <- c("SampleName", "SampleType")
+
+
+
+
+
+####################################
+final.result.annot <- as.data.frame(final.result.annot)
+colnames(final.result.annot)
+top.mRNA <- subset(final.result.annot, padj<0.01 & abs(log2FoldChange)>=2)
+write.table(x = top.mRNA, file = " Top mRNA.txt", quote = F, sep = "\t",row.names = F)
+
+
+
+final.result.annot.lncRNA <- as.data.frame(final.result.annot.lncRNA)
+colnames(final.result.annot.lncRNA)
+
+top.lncRNA <- subset(final.result.annot.lncRNA, padj<0.01 & abs(log2FoldChange)>=2)
+write.table(x = top.lncRNA, file = " Top lncRNA1.txt", quote = F, sep = "\t",row.names = F)
+
+
+##########################################
+
+
+final.result.annot.miRNA <- as.data.frame(final.result.annot.miRNA)
+colnames(final.result.annot.miRNA)
+
+top.miRNA <- subset(final.result.annot.miRNA, padj<0.05 & abs(log2FoldChange)>=1.5)
+write.table(x = top.miRNA, file = " Top miRNA.txt", quote = F, sep = "\t",row.names = F)
+
+
+
+#####################################
+
+
+library(msigdbr)
+msigdb.data= msigdbr(species = "Homo sapiens", category = "C2")
+library(clusterProfiler)
+
+
+x=rownames(top_genes)
+x=data.frame(x)
+ENS_id=x
+ENS_id=data.frame(ENS_id)
+gene_name_whole=final.result.annot.whole$Symbol
+gene_name_whole=data.frame(gene_name_whole)
+
+write.table(ENS_id, file = "ENS_is.txt", quote = F,sep = "\t")
+write.table(gene_name_whole, file = "whole gene_name.txt", quote = F,sep = "\t",row.names = F)
+write.table(msigdb.data, file = "msigdb data.txt", quote = F,sep="\t")
+msigdb.data1=read.csv(file = "msigdb data.csv", header = T,sep = "\"", quote = ",")
+
+
+library("AnnotationDbi")
+library("org.Hs.eg.db")
+df$Ens.id = mapIds(org.Hs.eg.db,
+                   keys=y, 
+                   column="ENSEMBL",
+                   keytype="SYMBOL",
+                   multiVals="first")
+
+
+gene_name_whole1=gene_name_whole[1:29986,1]
+
+
+Ens.id= read.table("ENS_id_mRNA.txt")
+colnames(Ens.id)=ENS_id
+
+ensemble_subset= select(msigdb.data, gs_name, ensembl_gene)
+data_ensembl_list=(ENS_id$x)
+data_ensembl_list1=(gene_name_whole$gene_name_whole)
+
+enrichr_run= enricher(gene = data_ensembl_list,TERM2GENE = ensemble_subset)
+f.result=enrichr_run@result
+
+
+write.table(x = f.result,file = "f.result.msigdb enrichment.txt",quote = F,sep = "\t")
+
+
+library(tidyverse)
+f.result2=f.result %>%
+  separate(BgRatio,into=c("size.term","size.category"), sep = "/") %>%
+  separate(GeneRatio, into=c("size.overlap.term","size.overlap.category"), 
+           sep = "/") %>%
+  mutate_at(vars("size.term","size.category", "size.overlap.term","size.overlap.category"),
+            as.numeric)%>%
+  mutate("k.k"=size.overlap.term/size.term)
+
+
+######################
+
+data_subset=subset(f.result2, f.result2$p.adjust<=0.01)
+
+data_subset=subset(f.result, f.result$p.adjust<=0.01)
+data_subset=top_genes[,1]
+data_subset=data.frame(data_subset)
+library(ggplot2)
+
+plot= ggplot (data_subset, aes(x=reorder(Description, k.k), y=k.k)) +
+  geom_col(col="grey", fill="lightblue") + theme_classic()+theme(text=element_text(size=8))+ coord_flip()+
+  labs(y="Significant gene in set", x="Gene set",
+       title= "significant genes(FDR<0.05)/enrichment in msigdb gene sets(FDR<0.05)", cex=0.001)
+plot
+
+
+
+
+########################################
+
+
+ENS_id=Ens.mRNA[,1]
+ENS_id=data.frame(ENS_id)
+gene_name=final.result.annot[,1]
+gene_name=data.frame(gene_name)
+write.table(ENS_id, file = "ENS_is.txt", quote = F,sep = "\t")
+write.table(gene_name, file = "whole gene_name.txt", quote = F,sep = "\t",row.names = F)
+ensembl.subset= select(msigdb.data$gene_symbol, msigdb.data$ensembl_gene)
+ENS_id <- read.csv("Ens.id.whole.csv",header = F)
+colnames(ENS_id)=c("gene_symbol", "ENS_id")
+ensemble_subset= select(msigdb.data, gs_name, ensembl_gene)
+data_ensembl_list1=(ENS_id$ENS_id)
+data_ensembl_list1=(gene_name$gene_name)
+
+enrichr_run= enricher(gene = data_ensembl_list1,TERM2GENE = ensemble_subset)
+f.result=enrichr_run@result
+
+
+write.table(x = f.result,file = "f.result.whole.txt",quote = F,sep = "\t")
+
+
+library(tidyverse)
+f.result2=f.result %>%
+  separate(BgRatio,into=c("size.term","size.category"), sep = "/") %>%
+  separate(GeneRatio, into=c("size.overlap.term","size.overlap.category"), 
+           sep = "/") %>%
+  mutate_at(vars("size.term","size.category", "size.overlap.term","size.overlap.category"),
+            as.numeric)%>%
+  mutate("k.k"=size.overlap.term/size.term)
+
+
+######################
+
+data_subset=subset(f.result2, f.result2$p.adjust<=0.01)
+
+library(ggplot2)
+plot= ggplot (data_subset, aes(x=reorder(Description, k.k), y=k.k)) +
+  geom_col(col="grey", fill="lightpink") + theme_classic()+theme(text=element_text(size=8))+ coord_flip()+
+  labs(y="Significant gene in set", x="Gene set",
+       title= "significant genes(FDR<0.05)/enrichment in msigdb gene sets(FDR<0.05)", cex=0.001)
+plot
+################################################
+library(enrichR)
+
+enrichrdb= listEnrichrDbs()
+
+view(enrichrdb)
+selected_db=c("KEGG_2021_Human", "Reactome_2022", "MsigDB_Hallmark_2020","TargetScan_microRNA"
+              ,"GO_Molecular_Function_2023","GO_Cellular_Component_2023",
+              "GO_Biological_Process_2023","OMIM_Disease","WikiPathway_2023_Human",
+              "FANTOM6_lncRNA_KD_DEGs","GWAS_Catalog_2023","lncHUB_lncRNA_Co_Expression")
+my.enrichr=enrichr(rownames(top2),selected_db)
+lncRNA=my.enrichr[["FANTOM6_lncRNA_KD_DEGs"]]
+microRNA=my.enrichr[["TargetScan_microRNA"]]
+KEGG=my.enrichr[["KEGG_2021_Human"]]
+Reactome=my.enrichr[["Reactome_2022"]]
+GWAS= my.enrichr[["GWAS_Catalog_2023"]]
+GO.molecular=my.enrichr[["GO_Molecular_Function_2023"]]
+GO.cellular=my.enrichr[["GO_Cellular_Component_2023"]]
+GO.biological=my.enrichr[["GO_Biological_Process_2023"]]
+OMIM.disease=my.enrichr[["OMIM_Disease"]]
+
+setwd("C:/Users/SadraSystem/Desktop/datasets/primary PB vs control PB/enrichment1")
+
+write.table(x = GO.molecular,file = "GO molecular function.txt")
+write.table(x = GO.cellular,file = "GO cellular component.txt")
+write.table(x = GO.biological,file = "GO biological process.txt")
+write.table(x = OMIM.disease,file = "OMIM disease.txt")
+write.table(x = KEGG,file = "KEGG.txt")
+write.table(x = microRNA,file = "microRNA.txt")
+write.table(x = Reactome,file = "Reactome.txt")
+write.table(x = lncRNA,file = "FANTOM6.txt")
+write.table(x = GWAS,file = "GWAS.txt")
+
+
+plotEnrich(KEGG, title="Enrichr-KEGG 2021 Human", orderBy = "Adjusted.P.Value")
+plotEnrich(microRNA, title="TargetScan microRNA", orderBy = "Adjusted.P.Value")
+plotEnrich(Reactome, title="Reactome 2022", orderBy = "P.Value")
+plotEnrich(GWAS, title="GWAS Catalog 2023", orderBy = "Adjusted.P.Value")
+plotEnrich(lncRNA, title="FANTOM6 lncRNA", orderBy = "Adjusted.P.Value")
+plotEnrich(GO.molecular, title="GO Molecular Function 2023", orderBy = "Adjusted.P.Value")
+plotEnrich(GO.cellular, title="GO Cellular Component 2023", orderBy = "Adjusted.P.Value")
+plotEnrich(GO.biological, title="GO Biological Process 2023", orderBy = "Adjusted.P.Value")
+plotEnrich(OMIM.disease, title="OMIM disease 2023", orderBy = "Adjusted.P.Value")
+
+?plotEnrich
+
+install.packages("igraph")
+
+top_gene_count2=top_gene_count[,-1]
+
